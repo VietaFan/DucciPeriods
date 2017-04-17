@@ -188,6 +188,8 @@ int main() {
 		cout << n << ',' << x << ',' << y;
 		if (x!=0)
 			cout << ',' << y/x;
+		else
+			cout << ",0";
 		cout << endl;
 		/*cout << "s(" << n << ") ";
 		if (x == 0) {
