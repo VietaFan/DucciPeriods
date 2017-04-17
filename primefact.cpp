@@ -52,3 +52,42 @@ void getPrimeVecs(int64_t n, vector<int64_t> &primes, vector<int> &counts, vecto
 		relprimes.push_back(n);
 	}
 }
+
+void getNextPrime(vector<int64_t> &primes) {
+	int64_t start = primes[primes.size()-1];
+	for (int64_t p=start+1; ; ++p) {
+		for (int j=0; j<primes.size(); ++j) {
+			if (!(p%primes[j])) {
+				goto gnp_skip;
+			}
+		}
+		primes.push_back(p);
+		return;
+		gnp_skip:;
+	}
+}
+void primeFact(int64_t n, vector<int64_t> &primes, vector<int> &counts, vector<int64_t> &relprimes) {
+	int64_t p;
+	int k;
+	if (primes.size() == 0)
+		primes.push_back(2);
+	for (int i=0; primes[i]*primes[i] < n && n > 1; ++i) {
+		p = primes[i];
+		k = 0;
+		while (!(n%p)) {
+			n /= p;
+			++k;
+		}
+		if (k > 0) {
+			counts.push_back(k);
+			relprimes.push_back(p);
+		}
+		if (i == primes.size()-1 && n > 1) {
+			getNextPrime(primes);
+		}
+	}
+	if (n > 1) {
+		counts.push_back(1);
+		relprimes.push_back(n);
+	}
+}

@@ -59,11 +59,14 @@ int64_t q(int n) {
 
 vector<int64_t> primes;
 
-int64_t mindiv(int n, vector<int> &bounds, vector<int> &current, vector<int64_t> &relprimes, int depth) {
+
+// returns the smallest divisor of the number with the given prime factorization that works
+// if none is found (e.g. it's > 2^63-1 and overflows an int64_t), it returns 0;
+int64_t mindiv(int n, vector<int> &minexp, vector<int> &maxexp, vector<int> &current, vector<int64_t> &relprimes, int depth) {
 /*	if (depth%1000 == 0) {
 		cout << "depth = " << depth << endl;
 	} */
-	if (depth == bounds.size()) {
+	if (depth == maxexp.size()) {
 		int64_t k = 1;
 		for (int i=0; i<current.size(); ++i) {
 			for (int j=0; j<current[i]; ++j) {
@@ -79,9 +82,9 @@ int64_t mindiv(int n, vector<int> &bounds, vector<int> &current, vector<int64_t>
 		return 0;
 	}
 	int64_t ans = 0, x;
-	for (int i=0; i<=bounds[depth]; ++i) {
+	for (int i=minexp[depth]; i<=maxexp[depth]; ++i) {
 		current[depth] = i;
-		x = mindiv(n, bounds, current, relprimes, depth+1);
+		x = mindiv(n, minexp, maxexp, current, relprimes, depth+1);
 		if (x > 0 && (ans == 0 || x < ans))
 			ans = x;
 	}
@@ -102,6 +105,15 @@ int64_t maxqdiv(int n) {
 	vector<int> pvec;
 	vector<int64_t> relprimes;
 	getPrimeVecs(qn, primes, pvec, relprimes);
+	vector<int> minexp;
+	int64_t n2 = n;
+	for (int i=0; i<pvec.size(); ++i) {
+		minexp.push_back(0);
+		while (!(n2%relprimes[i])) {
+			n2 /= relprimes[i];
+			minexp[i]++;
+		}
+	}
 	/*int64_t prod = 1;
 	for (int i=0; i<pvec.size(); ++i) {
 		for (int j=0; j<pvec[i]; ++j) {
@@ -125,7 +137,7 @@ int64_t maxqdiv(int n) {
 	//	cout  << pvec[i] << ' ';
 	//cout << '\n';
 //	cout << pvec.size() << '\n';
-	int64_t sol = mindiv(n, pvec, v, relprimes, 0);
+	int64_t sol = mindiv(n, minexp, pvec, v, relprimes, 0);
 	cout << "minimum divisor solution: " << sol << '\n';
 	int64_t ans = qn/sol;
 	//if (hugePrime)
@@ -143,18 +155,49 @@ int quickfind(unsigned n) {
 	return 100000000;
 }
 
-
-
+int64_t divfind(unsigned n) {
+	int ord = gamma2(n);
+	int64_t maxval = (1LL<<ord)-1;
+	vector<int> pvec;
+	vector<int64_t> relprimes;
+	primeFact(maxval, primes, pvec, relprimes);
+	vector<int> minexp;
+	int n2 = n;
+	vector<int> v;
+	for (int i=0; i<pvec.size(); ++i) {
+		v.push_back(0);
+		minexp.push_back(0);
+		while (!(n2%relprimes[i])) {
+			n2 /= relprimes[i];
+			minexp[i]++;
+		}
+	}
+	/*cout << maxval << endl;
+	for (int i=0; i<relprimes.size(); ++i) {
+		cout << relprimes[i] << ' ' << minexp[i] << ' ' << pvec[i] << '\n';
+	}*/
+	return mindiv(n, minexp, pvec, v, relprimes, 0);
+}
 int main() {
 	int n,k;
-//	for (int n=1; n<101; n += 2)
-//		cout << n << ' ' << quickfind(n) << '\n';
-	getPrimesTo(100, primes);
+	int64_t x;
+	freopen("svals.txt", "w", stdout);
+	for (int n=3; n<500; n += 2) {
+		x = divfind(n);
+		cout << "s(" << n << ") ";
+		if (x == 0) {
+			cout << ">= 2^63\n";
+		} else {
+			cout << "= " << x << '\n';
+		}
+	}
+	fclose(stdout);
+/*	getPrimesTo(100, primes);
 	for (int i=1; primes[i] < 50000; ++i) {
 		if (q(primes[i]) > 1e15)
 			continue;
 		maxqdiv(primes[i]);
-	}
+	}*/
 	/*
 	while (1) {
 		cout << "Enter n:>";
@@ -163,8 +206,9 @@ int main() {
 	//	cin >> k;
 		//quickcheck(n,k);
 		//cout << binCoeffs(k) << endl;
+		cout << divfind(n) << '\n';
 		//cout << quickfind(n) << '\n';
-		cout << maxqdiv(n) << '\n';
+		//cout << maxqdiv(n) << '\n';
 		//cout << getk(n) << '\n';
 	}*/
 }
