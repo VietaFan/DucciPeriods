@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <cstdint>
+#include <iomanip>
 #include <cmath>
 #include <algorithm>
 #include "bincoeffs.cpp"
@@ -187,7 +188,13 @@ int main() {
 	for (int n=3; n<500; n += 2) {
 		x = divfind(n);
 		y = q(n);
-		cout << n << ',' << x << ',' << y;
+		cout << n << ',' << x << ',' << y << ',';
+		if (x == 0 || y == 0) {
+			cout << "q(n) or s(n) too big";
+		} else {
+			cout << setprecision(6) << (1.0*y)/x;
+		}
+		/*
 		if (find(primes.begin(), primes.end(), n) != primes.end() && x > 0) {
 			cout << ',' << y/x;
 		} else {
