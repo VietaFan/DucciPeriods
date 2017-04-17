@@ -183,6 +183,7 @@ int main() {
 	int n,k;
 	int64_t x, y;
 	freopen("svals_q.csv", "w", stdout);
+	getPrimesTo(500, primes);
 	for (int n=3; n<500; n += 2) {
 		x = divfind(n);
 		y = q(n);
