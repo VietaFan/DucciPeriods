@@ -181,15 +181,16 @@ int64_t divfind(unsigned n) {
 int main() {
 	int n,k;
 	int64_t x;
-	freopen("svals.txt", "w", stdout);
+	freopen("svals.csv", "w", stdout);
 	for (int n=3; n<500; n += 2) {
 		x = divfind(n);
-		cout << "s(" << n << ") ";
+		cout << n << ',' << x << endl;
+		/*cout << "s(" << n << ") ";
 		if (x == 0) {
 			cout << ">= 2^63\n";
 		} else {
 			cout << "= " << x << '\n';
-		}
+		}*/
 	}
 	fclose(stdout);
 /*	getPrimesTo(100, primes);
