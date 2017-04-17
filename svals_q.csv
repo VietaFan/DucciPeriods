@@ -1,4 +1,4 @@
-n,s(n),q(n),q(n)/s(n)
+n,s(n) (or 0 if s(n) >= 2^63),q(n) (or 0 if q(n) >= 2^63),q(n)/s(n) if n is prime and s(n) < 2^63
 3,3,3,1
 5,15,15,1
 7,7,7,1
