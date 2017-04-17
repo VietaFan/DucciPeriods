@@ -46,12 +46,24 @@ int gamma2(int n) {
 	return i;
 }
 
+bool neg1exists(int n) {
+	int m = 2, i;
+	for (i=1; m!=1; ++i) {
+		m *= 2;
+		m %= n;
+		if (m == n-1)
+			return 1;
+	}
+	return 0;
+}
+
 int64_t q(int n) {
 	int gam2 = gamma2(n);
-	if ((gam2%2 && gam2 > 63) || (gam2%2 == 0&& gam2/2 > 63-log2(n))) {
+	bool b = neg1exists(n);
+	if (((!b) && gam2 > 63) || (b && gam2/2 > 63-log2(n))) {
 		return 0;
 	}
-	if (gam2%2) {
+	if (!b) {
 		return (1LL << gam2)-1;
 	}
 	else {
