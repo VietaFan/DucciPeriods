@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <cstdint>
 #include <cmath>
+#include <algorithm>
 #include "bincoeffs.cpp"
 #include "primefact.cpp"
 using namespace std;
@@ -186,10 +187,15 @@ int main() {
 		x = divfind(n);
 		y = q(n);
 		cout << n << ',' << x << ',' << y;
-		if (x!=0)
+		if (find(primes.begin(), primes.end(), n) != primes.end() && x > 0) {
+			cout << ',' << y/x;
+		} else {
+			cout << ",composite or x >= 2^63";
+		}
+	/*	if (x!=0)
 			cout << ',' << y/x;
 		else
-			cout << ",0";
+			cout << ",0";*/
 		cout << endl;
 		/*cout << "s(" << n << ") ";
 		if (x == 0) {
